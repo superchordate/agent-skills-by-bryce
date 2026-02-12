@@ -23,6 +23,7 @@ Guide for improving GitHub Copilot Agent performance through skills, custom inst
 **Key principles:**
 - **Concise is key**: Context window is shared. Only add what Copilot doesn't already know. Challenge each piece: "Does this justify its token cost?"
 - **First 50 lines critical**: Copilot often only reads the start of files. Put essential content first with lots of # references to detailed sections below.
+- **Quick Reference REQUIRED**: Every skill must have a comprehensive Quick Reference with hash links to ALL major sections. This is how Copilot navigates the skill.
 - **Iterative not comprehensive**: Skills grow over time. First draft should be concise and focused, not exhaustive. → [Iteration guide](#step-4-iterate)
 - **Match freedom to fragility**: High freedom (text) for flexible tasks, low freedom (specific scripts) for fragile operations. → [Details](#degrees-of-freedom)
 
@@ -47,7 +48,11 @@ Guide for improving GitHub Copilot Agent performance through skills, custom inst
   - `name`: Unique identifier, lowercase with hyphens
   - `description`: What it does AND when Copilot should use it (this is how Copilot decides to load the skill)
   - `license` (optional): License information
-- **Markdown body**: Instructions, examples, and guidelines for Copilot to follow → [Writing guide](#writing-effective-skills)
+- **Markdown body**: Instructions, examples, and guidelines for Copilot to follow
+  - **Quick Reference section** (critical): Table of contents with hash links to ALL major sections
+  - Essential patterns, commands, and setup info
+  - Detailed sections below with proper headings
+  → [Writing guide](#writing-effective-skills)
 
 **How Copilot uses skills:** When performing tasks, Copilot decides when to use skills based on your prompt and the skill's description. When Copilot chooses a skill, the SKILL.md file is injected into the agent's context. → [Content tips](#content-organization)
 
@@ -82,6 +87,12 @@ Guide for improving GitHub Copilot Agent performance through skills, custom inst
 ### Writing Effective Skills
 
 **First 50 lines are critical:** Copilot often only reads the beginning of files. Structure skills with essential content and navigation first, detailed sections below. Expect Copilot to read the first 50 lines, then jump to specific sections as needed.
+
+**Quick Reference with navigation is REQUIRED:** Every skill must have a comprehensive Quick Reference section with:
+- Hash links to ALL major sections and important subsections
+- Essential patterns, commands, or setup instructions
+- Organized navigation groupings (Setup, Patterns, Mocking, Best Practices, etc.)
+- This acts as a table of contents - Copilot uses it to navigate to relevant sections
 
 **Be iterative:** Don't aim for comprehensive coverage in first draft. Skills improve over time through real usage. Start concise and focused, add details as patterns emerge.
 
@@ -598,6 +609,7 @@ Example description: "Guide for debugging failing GitHub Actions workflows. Use 
 **Write Markdown body:** 
 - Use imperative form
 - First 50 lines should contain essential content with references to detailed sections below
+- **CRITICAL:** Include comprehensive Quick Reference with navigation links
 - Include clear step-by-step instructions
 - Provide examples where helpful
 - Keep concise, iterate over time
@@ -609,15 +621,41 @@ Example description: "Guide for debugging failing GitHub Actions workflows. Use 
 Quick overview of what this skill does.
 
 ## Quick Reference
-[Essential patterns, commands, gotchas]
+
+**Navigation:**
+- **Setup & Configuration** → [Initial Setup](#setup), [Configuration](#configuration), [Dependencies](#dependencies)
+- **Core Patterns** → [Pattern A](#pattern-a), [Pattern B](#pattern-b), [Advanced Usage](#advanced-usage)
+- **Mocking** → [Mock Feature X](#mock-feature-x), [Mock Feature Y](#mock-feature-y)
+- **Best Practices** → [Do's and Don'ts](#best-practices), [Common Pitfalls](#common-pitfalls)
+- **Troubleshooting** → [Common Issues](#troubleshooting)
+
+**Essential commands:**
+```bash
+command-to-setup
+command-to-run
+```
+
+**Key pattern example:**
+```typescript
+// Brief example of most common use case
+```
 
 ---
 
-## Detailed Steps
-[Step-by-step instructions]
+## Setup
+[Detailed setup instructions]
 
-## Examples
-[Real-world usage examples]
+## Pattern A
+[Detailed pattern explanation]
+
+## Mock Feature X
+[Detailed mocking guide]
+
+## Best Practices
+[Detailed best practices]
+
+## Troubleshooting
+[Common issues and solutions]
 ```
 
 ### Step 4: Iterate
@@ -629,3 +667,40 @@ Use skill in real Copilot sessions → notice where Copilot struggles or gets co
 - Observe when Copilot uses the skill (check if it follows your instructions)
 - Refine the description if Copilot doesn't load the skill when expected
 - Add examples or clarifications to the body based on real usage patterns
+
+---
+
+## Skill Quality Checklist
+
+Before finalizing a skill, verify it includes:
+
+**✅ Required elements:**
+- [ ] YAML frontmatter with `name` and comprehensive `description`
+- [ ] Quick Reference section in first 50 lines
+- [ ] Table of contents with hash links to ALL major sections
+- [ ] Essential commands, patterns, or setup instructions
+- [ ] Detailed sections with proper `##` or `###` headings
+- [ ] Examples showing common use cases
+- [ ] Code snippets with proper syntax highlighting
+
+**✅ Navigation structure:**
+- [ ] Quick Reference organized into logical groupings (Setup, Patterns, Mocking, etc.)
+- [ ] Hash links use exact heading text (case-sensitive, spaces become hyphens)
+- [ ] All major sections are linked from Quick Reference
+- [ ] Important subsections are included in navigation
+
+**✅ Content quality:**
+- [ ] Instructions are imperative and actionable
+- [ ] Examples are copy-paste ready
+- [ ] Edge cases and common pitfalls covered
+- [ ] Troubleshooting section for known issues
+- [ ] No unnecessary content that belongs in custom instructions
+
+**❌ Common mistakes to avoid:**
+- Missing Quick Reference section entirely
+- Quick Reference without hash links to sections
+- Incomplete navigation (missing major sections)
+- Vague or generic description in frontmatter
+- First 50 lines contain only setup code without navigation
+- No section headings (makes navigation impossible)
+- Content that applies to 80%+ of tasks (belongs in custom instructions instead)

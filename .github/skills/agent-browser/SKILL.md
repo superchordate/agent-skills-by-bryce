@@ -27,7 +27,7 @@ description: Use this skill when the task requires the agent to test or browse a
 - Prefer headless mode for speed, headed mode for visual debugging.
 - Always wait for the relevant load state (`domcontentloaded`, `networkidle`) before assertions.
 - Use explicit waits for selectors rather than arbitrary sleeps.
-- Ask the user to start up the app, don't start it yourself.
+- Ask the user to start up the app, don't start it yourself. Ask them if there is a specific URL you can jump to for testing.
 
 ## Python Playwright Template
 ```python
