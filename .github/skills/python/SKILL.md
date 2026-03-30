@@ -19,8 +19,9 @@ Guide for Python development in this project.
 - **Replace Unicode with ASCII** - Avoid encoding issues on Windows terminals
 - **No empty `__init__.py`** unless necessary
 
-**Guidelines:**
+**Working with Data:**
 - Use polars instead of pandas whenever possible. Read files as all strings and convert later if you need to.
+- When using polars read, use `infer_schema_length=0` to avoid type inference issues and read everything as strings. 
 
 **Package Installation:**
 - Always use PowerShell commands instead of VS Code extensions or MCP. 
