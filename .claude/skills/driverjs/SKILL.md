@@ -1,5 +1,5 @@
 ---
-name: driver-js
+name: driverjs
 description: Guide for implementing product tours, walkthroughs, and element highlighting using driver.js. Use this when asked to create tours, add walkthroughs, highlight UI elements, or implement user onboarding flows.
 ---
 
