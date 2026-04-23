@@ -1,13 +1,125 @@
 ---
-name: tdd
-description: Strategy for debugging with Test Driven Development. Use whenever the user asks for help debugging code or to fix something in the app.
+name: tdd-red-green-refactor
+description: >
+  Enforces a disciplined Red-Green-Refactor (TDD) workflow in TypeScript/Node.js.
+  Use this whenever creating new features, fixing bugs, or migrating logic to ensure
+  high-quality, verifiable implementations.
 ---
 
-# Test-Driven Development (TDD)
+# Red-Green-Refactor (TDD) Skill: TypeScript Edition
 
-Use these steps to fix bugs, only skip them if the nature of the bug makes writing a test very difficult. 
-1. Identify the fix for the bug, but don't implement it yet. Use debug logging (with JSON stringify so we don't need to expand objects in the console) or other techniques to understand the root cause of the bug.
-2. Write a test that fails because of the bug. This test should be as specific as possible to the bug, and should fail because of the bug. Use the test-nextjs and analytics-app-tests skills for guidance on writing tests. DO NOT FIX THE BUG YET. Run the test to ensure it fails in the manner expected.
-3. Implement the fix for the bug.
-4. Run the test to ensure it passes. If it doesn't, go back to step 1 and repeat the process until the test passes.
+This skill implements a structural framework for AI-assisted programming so every change is test-verified, typed, and incremental.
+
+## Quick Reference
+
+- Use for new features, bug fixes, and logic migrations.
+- Mandatory loop: Write 1 test -> See it fail -> Write minimal fix -> See it pass -> Refactor -> Re-run tests.
+- Never batch-write many tests before implementation.
+- Never change tests just to make broken code pass.
+- For bug fixes, first confirm root cause with focused debug logging (use JSON.stringify for nested objects).
+
+## The Three-Phase Cycle
+
+### Phase 1: Red (Establish Failure)
+You must prove the feature does not exist and that your test is valid.
+
+1. Write one test for the next smallest behavior slice.
+2. Execute the test and confirm it fails.
+3. Verify failure quality:
+	 - Failure must come from missing/incorrect logic.
+	 - Failure must not be caused by setup/config errors.
+4. For bug fixes, gather root-cause evidence before implementing:
+	 - Add minimal debug logs when behavior is unclear.
+	 - Prefer JSON.stringify-based logs for complex objects.
+
+### Phase 2: Green (Minimal Pass)
+Make the test pass as quickly and simply as possible.
+
+1. Write the smallest implementation that satisfies only the current Red test.
+2. Run tests:
+	 - Run the focused test first.
+	 - Then run the broader impacted test set.
+3. Treat Red -> Green as the proof-of-work checkpoint.
+
+### Phase 3: Refactor (Clean Up)
+Improve structure while preserving Green.
+
+1. Refactor for naming, duplication, and clarity.
+2. Re-run tests after each meaningful refactor step.
+3. If tests go Red, revert or correct immediately, then re-run.
+
+## Core Operational Rules
+
+### 1) No Horizontal Splurging
+Do not write a large batch of tests upfront.
+
+- Required cadence: Write 1 Test -> Fail -> Write 1 Fix -> Pass.
+- Repeat loop for each sub-behavior.
+
+### 2) Impose Backpressure
+Use assertions and strong typing to prevent speculative coding.
+
+- Prefer explicit TypeScript types over any.
+- Let type errors and failing tests guide each next step.
+
+### 3) Verification of Integrity
+Do not weaken tests to fit flawed code.
+
+- Only change tests when requirements changed.
+- If a test is updated, document the requirement change in your reasoning.
+
+### 4) Fail Loudly
+Do not hide real errors during debugging.
+
+- Avoid try/catch wrappers and silent fallbacks for core logic under test.
+- Prefer direct failures so the Red phase reveals the true defect.
+
+## Workflow Template
+
+Use this exact loop during implementation:
+
+1. Red: add one focused failing test.
+2. Green: implement the smallest passing change.
+3. Refactor: clean code while staying green.
+4. Repeat for the next behavior.
+
+## Example Workflow (TypeScript + Vitest)
+
+Step 1: Red
+
+```typescript
+// math.test.ts
+import { describe, it, expect } from 'vitest';
+import { add } from './math';
+
+describe('add', () => {
+	it('should sum two numbers', () => {
+		expect(add(2, 2)).toBe(4); // Fails while implementation is missing/incorrect
+	});
+});
+```
+
+Step 2: Green
+
+```typescript
+// math.ts
+export const add = (a: unknown, b: unknown) => {
+	return 4; // Minimal code to pass only the current test
+};
+```
+
+Step 3: Refactor
+
+```typescript
+// math.ts
+export const add = (a: number, b: number): number => {
+	return a + b;
+};
+```
+
+## Execution Notes
+
+- If possible, run targeted tests first to keep the cycle tight.
+- If a failing test is ambiguous, improve test specificity before implementation.
+- If implementation does not turn Green, return to Red diagnostics and tighten understanding before writing more code.
 

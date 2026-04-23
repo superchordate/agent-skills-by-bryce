@@ -14,4 +14,4 @@
 
 - You can ask for help! If there is clearly important context missing, stop what you are doing and ask the user for help. If the user gets annoyed, that's OK it just means you are asking the correct amount of questions. 
 
-- Write temp python files and run them with venv instead of trying to write Python in PowerShell. 
+- Write temp python files and run them with venv instead of trying to write Python in PowerShell. Just make sure to delete the file when you are done.
