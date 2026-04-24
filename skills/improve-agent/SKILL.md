@@ -5,56 +5,39 @@ description: Guide for improving GitHub Copilot Agent performance through skills
 
 # Agent Improvement Guide
 
-Guide for improving GitHub Copilot Agent performance through skills, custom instructions, AGENTS.md, or other methods.
-
 ## Quick Reference
 
-**What this skill covers:** Improving GitHub Copilot Agent performance through multiple approaches including Skills, Custom Instructions, AGENTS.md, and path-specific instructions. Learn when to use each method and how to implement them.
+**What this skill covers:** Improving GitHub Copilot Agent performance through Skills, Custom Instructions, AGENTS.md, and path-specific instructions.
 
 **Instruction types:**
-- **Skills** = On-demand, specialized (`.github/skills/NAME/SKILL.md`) → [Details](#agent-skills-githubskills)
-- **Custom Instructions** = Always-in-context, general (`.github/copilot-instructions.md`) → [Details](#custom-instructions-githubcopilot-instructionsmd)
-- **Path-Specific** = Context for specific files/dirs (`.github/instructions/NAME.instructions.md`) → [Details](#path-specific-instructions-githubinstructionsinstructionsmd)
-- **AGENTS.md** = Directory-based precedence (nearest `AGENTS.md` wins) → [Details](#agent-instructions-agentsmd)
+- **Skills** = On-demand, specialized (`.github/skills/NAME/SKILL.md`)
+- **Custom Instructions** = Always-in-context, general (`.github/copilot-instructions.md`)
+- **Path-Specific** = Context for specific files/dirs (`.github/instructions/NAME.instructions.md`)
+- **AGENTS.md** = Directory-based precedence (nearest `AGENTS.md` wins)
 
-**Decision:** Need it for 80%+ of tasks? → Custom Instructions. Specific workflows only? → Skill. Different rules per directory? → Path-specific or AGENTS.md.  
-→ [See detailed decision guide](#skills-vs-custom-instructions-decision-guide)
+**Quick decision:** Need it for 80%+ of tasks? → Custom Instructions. Specific workflows only? → Skill. Different rules per directory? → Path-specific or AGENTS.md. → [Decision guide](#skills-vs-custom-instructions-decision-guide)
 
 **Key principles:**
-- **Concise is key**: Context window is shared. Only add what Copilot doesn't already know. Challenge each piece: "Does this justify its token cost?"
-- **First 50 lines critical**: Copilot often only reads the start of files. Put essential content first with lots of # references to detailed sections below.
-- **Quick Reference REQUIRED**: Every skill must have a comprehensive Quick Reference with hash links to ALL major sections. This is how Copilot navigates the skill.
-- **Iterative not comprehensive**: Skills grow over time. First draft should be concise and focused, not exhaustive. → [Iteration guide](#step-4-iterate)
-- **Match freedom to fragility**: High freedom (text) for flexible tasks, low freedom (specific scripts) for fragile operations. → [Details](#degrees-of-freedom)
+- **Less is more**: Agents overindex on first 50 lines. Put navigation and key decisions first, details below with hash links.
+- **Context is costly**: Only add what Copilot doesn't already know. Challenge each piece: "Does this justify its token cost?"
+- **Description triggers loading**: The skill `description` field determines when Copilot loads it. Be specific about WHEN to use.
+- **Iterate, don't perfect**: Start minimal, add details based on real usage patterns. → [Iteration guide](#testing-and-iterating)
+- **Match freedom to fragility**: Text for flexible tasks, specific scripts for fragile operations. → [Details](#degrees-of-freedom)
 
-**Improvement process:**
-0. Identify what needs improvement (agent understanding, task execution, domain knowledge, etc.). Ask the user questions if you aren't sure. → [See Step 0](#step-0-identify-improvement-area)
-1. Decide best approach: Custom instructions, skill, AGENTS.md, or path-specific? → [Decision guide](#skills-vs-custom-instructions-decision-guide)
-2. **If custom instructions:** Update `.github/copilot-instructions.md` → [Setup guide](#custom-instructions-setup)
-3. **If AGENTS.md:** Create/update `AGENTS.md` in relevant directory → [AGENTS.md guide](#agent-instructions-agentsmd)
-4. **If skill:** Understand with concrete examples → [See Step 1](#step-1-understand-with-concrete-examples)
-5. **If skill:** Create/update SKILL.md file → [See Step 2](#step-2-create-skillmd)
-6. **If skill:** Write metadata and body → [See Step 3](#step-3-write-the-skill)
-7. Test and iterate based on usage → [See Step 4](#step-4-iterate)
+**Setup guides:**
+- [Custom Instructions](#custom-instructions-setup)
+- [Path-Specific Instructions](#path-specific-instructions)
+- [AGENTS.md](#agent-instructions-agentsmd)
+- [Skill creation process](#skill-creation-process)
 
-**Writing best practices:** → [Effective instructions](#writing-effective-instructions), [What NOT to include](#what-not-to-include-in-instructions), [Testing approach](#testing-and-iterating), [Troubleshooting](#troubleshooting)
+**Writing best practices:**
+- [Writing effective skills](#writing-effective-skills)
+- [Writing effective instructions](#writing-effective-instructions)
+- [What NOT to include](#what-not-to-include-in-instructions)
+- [Testing approach](#testing-and-iterating)
+- [Troubleshooting](#troubleshooting)
 
 **Naming:** lowercase-with-hyphens, under 64 chars, verb-led (e.g., `rotate-pdf`, `debug-github-actions`)
-
-**Agent improvement methods overview:** → [See all methods](#agent-improvement-methods)
-
-**SKILL.md structure:**
-- **YAML frontmatter** (required):
-  - `name`: Unique identifier, lowercase with hyphens
-  - `description`: What it does AND when Copilot should use it (this is how Copilot decides to load the skill)
-  - `license` (optional): License information
-- **Markdown body**: Instructions, examples, and guidelines for Copilot to follow
-  - **Quick Reference section** (critical): Table of contents with hash links to ALL major sections
-  - Essential patterns, commands, and setup info
-  - Detailed sections below with proper headings
-  → [Writing guide](#writing-effective-skills)
-
-**How Copilot uses skills:** When performing tasks, Copilot decides when to use skills based on your prompt and the skill's description. When Copilot chooses a skill, the SKILL.md file is injected into the agent's context. → [Content tips](#content-organization)
 
 ---
 
@@ -86,207 +69,124 @@ Guide for improving GitHub Copilot Agent performance through skills, custom inst
 
 ### Writing Effective Skills
 
-**First 50 lines are critical:** Copilot often only reads the beginning of files. Structure skills with essential content and navigation first, detailed sections below. Expect Copilot to read the first 50 lines, then jump to specific sections as needed.
+**Critical principles:**
+1. **First 50 lines** = Navigation and key decisions. Copilot reads this first, jumps to sections as needed.
+2. **Description field** = How Copilot decides to load your skill. Be specific about WHEN to use it.
+3. **Start minimal** = First draft should be concise. Add details based on real usage patterns.
+4. **Hash links everywhere** = Quick Reference must link to ALL major sections. Copilot uses them to navigate.
 
-**Quick Reference with navigation is REQUIRED:** Every skill must have a comprehensive Quick Reference section with:
-- Hash links to ALL major sections and important subsections
-- Essential patterns, commands, or setup instructions
-- Organized navigation groupings (Setup, Patterns, Mocking, Best Practices, etc.)
-- This acts as a table of contents - Copilot uses it to navigate to relevant sections
+**Quick Reference template:**
+```markdown
+## Quick Reference
 
-**Be iterative:** Don't aim for comprehensive coverage in first draft. Skills improve over time through real usage. Start concise and focused, add details as patterns emerge.
+**What this does:** One clear sentence.
 
-**Keep it focused:** If a skill becomes too large, consider splitting into multiple focused skills rather than one comprehensive skill.
+**When to use:** Specific triggers (file types, tasks, user requests).
 
-**Description is key:** The `description` field in YAML frontmatter is how Copilot decides whether to use your skill. Be comprehensive and specific about what the skill does and when it should be used.
+**Navigation:**
+- [Setup/Installation](#setup)
+- [Common patterns](#patterns)
+- [Examples](#examples)
+- [Troubleshooting](#troubleshooting)
+```
+
+**SKILL.md structure:**
+- YAML frontmatter: `name`, `description` (required), `license` (optional)
+- Quick Reference section with navigation
+- Detailed sections below with clear headings
+
+Detailed sections go below the Quick Reference with proper `###` or `####` headings.
 
 ### Skills vs Custom Instructions: Decision Guide
 
-**CRITICAL: Before creating a skill, determine if custom instructions are more appropriate.**
+**The 80% rule:** If you need it for 80%+ of tasks → Custom Instructions. Otherwise → Skill.
 
 #### Custom Instructions (`.github/copilot-instructions.md`)
 
-**Use custom instructions when:**
-- Information is relevant to **almost every task** in the repository
-- Guidance applies broadly across all files and features
-- Content describes "how this repository works" in general
+**Use when:**
+- Info is relevant to almost every task
+- Guidance applies broadly across all files
 
-**Examples of custom instructions:**
-- Coding standards and style preferences
-- Build, test, and run commands
-- Project structure and architecture overview
-- Where to find key files (configs, tests, docs)
-- CI/CD pipeline steps and validation requirements
-- Common gotchas and workarounds
-- Environment setup and dependencies
-- Naming conventions and coding patterns
+**Examples:** Build/test commands, project structure, coding standards, common gotchas
 
-**Benefits:**
-- ✅ **Always in context** - No need for Copilot to decide when to load them
-- ✅ Perfect for foundational knowledge every task needs
-- ✅ Reduces repetitive explanations across multiple skills
-
-**How to create:** → [See Custom Instructions Setup](#custom-instructions-setup)
+**Benefits:** ✅ Always in context ✅ No loading decision needed ✅ Foundational knowledge
 
 #### Agent Skills (`.github/skills/`)
 
-**Use skills when:**
-- Information is relevant only to **specific tasks or domains**
-- Guidance is specialized for particular workflows
-- Content would clutter context if always loaded
+**Use when:**
+- Info is relevant only to specific tasks/domains
+- Specialized workflows that would clutter context if always loaded
 
-**Examples of skills:**
-- Debugging specific integrations (GitHub Actions, API endpoints)
-- Working with specialized file formats (Parquet, PDF, DOCX)
-- Domain-specific queries (DuckDB patterns, database schemas)
-- Testing patterns for specific frameworks
-- Deployment procedures for specific environments
+**Examples:** Debugging GitHub Actions, working with Parquet/PDF files, DuckDB queries, testing patterns
 
-**Benefits:**
-- ✅ **Loaded on-demand** - Keeps context lean until needed
-- ✅ Perfect for specialized, detailed workflows
-- ✅ Can be very detailed without worrying about always using tokens
+**Benefits:** ✅ Loaded on-demand ✅ Detailed without context cost ✅ Keeps context lean
 
 #### Path-Specific Instructions (`.github/instructions/*.instructions.md`)
 
-**Use path-specific instructions when:**
-- Different parts of your codebase have **different rules**
-- Specific file types or directories need unique guidance
-- You want to avoid cluttering repository-wide instructions with niche rules
+**Use when:**
+- Different parts of codebase have different rules
+- File types or directories need unique guidance
 
-**Examples of path-specific instructions:**
-- API routes require specific error handling patterns
-- Test files have different standards than production code
-- Frontend components follow React patterns; backend follows Express patterns
-- Database migrations need special naming conventions
-- Legacy directories have different rules than new code
+**Examples:** API routes error handling, test file standards, frontend vs backend patterns
 
-**Benefits:**
-- ✅ **Automatically applied** when working on matching files
-- ✅ Combined with repository-wide instructions (both apply)
-- ✅ Can use glob patterns to target specific file types or directories
-
-**How to create:** → [See Path-Specific Instructions](#path-specific-instructions)
+**Benefits:** ✅ Auto-applied by glob pattern ✅ Combined with repo-wide instructions
 
 #### Agent Instructions (AGENTS.md)
 
-**Use AGENTS.md when:**
-- You want **directory-based precedence** (nearest file wins)
-- Different subdirectories represent different modules with unique patterns
-- Building multi-module projects where each module has distinct rules
-- Want portability across different AI agents (not just Copilot)
+**Use when:**
+- Want directory-based precedence (nearest file wins)
+- Different modules need unique patterns
+- Need portability across AI agents
 
-**Examples of AGENTS.md usage:**
-- Monorepo with multiple apps (each with `AGENTS.md`)
-- Frontend/backend split requiring different agent behaviors
-- Per-package instructions in a workspace
-- Module-specific coding patterns
+**Examples:** Monorepo apps, frontend/backend split, per-package instructions
 
-**Benefits:**
-- ✅ **Hierarchical precedence** - Closer files override parent instructions
-- ✅ Works across multiple AI agents (open standard)
-- ✅ Natural mapping to project structure
+**Benefits:** ✅ Hierarchical precedence ✅ Cross-agent compatibility ✅ Maps to project structure
 
-**How to create:** → [See Agent Instructions](#agent-instructions-agentsmd)
-
-**Decision matrix:**
+**Quick comparison:**
 
 | Need | Custom Instructions | Skill | Path-Specific | AGENTS.md |
-|------|--------------------|---------|--------------------|-----------|
-| "How do I run tests?" | ✅ Yes | ❌ No | ❌ No | ❌ No |
-| "How to debug GitHub Actions?" | ❌ No | ✅ Yes | ❌ No | ❌ No |
-| "What's the project structure?" | ✅ Yes | ❌ No | ❌ No | ❌ No |
-| "API routes need special error handling" | ❌ No | ❌ No | ✅ Yes | ✅ Possible |
-| "Code style preferences" | ✅ Yes | ❌ No | ❌ No | ❌ No |
-| "Frontend uses React, backend uses Express" | ❌ No | ❌ No | ✅ Yes | ✅ Yes |
-| "Adding filters to Trend Analysis" | ❌ No | ✅ Yes | ❌ No | ❌ No |
-
-**Rules of thumb:**
-- **80%+ of tasks** need this info → Custom instructions
-- **Specific workflows only** → Skill
-- **Different rules per file type/directory** → Path-specific
-- **Different rules per module with hierarchy** → AGENTS.md
-- **Prefer path-specific over AGENTS.md** for GitHub Copilot projects (better Copilot integration)
+|------|--------------------|---------|--------------------|--------|
+| "How do I run tests?" | ✅ | ❌ | ❌ | ❌ |
+| "Debug GitHub Actions?" | ❌ | ✅ | ❌ | ❌ |
+| "API routes need special handling" | ❌ | ❌ | ✅ | ✅ |
+| "Frontend vs backend patterns" | ❌ | ❌ | ✅ | ✅ |
 
 ### Custom Instructions Setup
 
 #### Repository-Wide Instructions
 
-Create `.github/copilot-instructions.md` with general guidance for the entire repository:
-
 ```bash
-# If .github directory doesn't exist:
 mkdir .github
 New-Item .github/copilot-instructions.md
 ```
 
 **What to include:**
-1. **Repository overview** - What the project does, tech stack, size
-2. **Build instructions** - Bootstrap, build, test, run, lint commands with exact steps
-3. **Project layout** - Where key files live, architecture overview
-4. **Validation steps** - CI checks, pre-commit hooks, manual validation
-5. **Common patterns** - Coding standards, naming conventions, file organization
-6. **Known issues** - Workarounds, timing requirements, order-dependent commands
+1. Build commands (install, dev, test, lint) with exact steps
+2. Project structure overview
+3. Coding standards and naming conventions
+4. Known issues and workarounds
 
-**Example structure:**
+**Example:**
 ```markdown
-# Project Overview
-This is a Next.js claims analytics app with TypeScript, Tailwind CSS, and Highcharts.
-
-# Build & Test Commands
+# Build Commands
 - Install: `npm install`
-- Dev server: `npm run dev`
-- Tests: `npm test` (runs Jest)
-- Coverage: `npm run test:coverage`
+- Dev: `npm run dev`
+- Test: `npm test`
 
 # Project Structure
-- `app/` - Next.js app directory (pages, components, API routes)
-- `__tests__/` - Jest test files
-- `.github/skills/` - Copilot agent skills
+- `app/` - Next.js pages
+- `__tests__/` - Jest tests
 
-# Coding Standards
-- Use TypeScript strict mode
-- Test coverage requirement: >80%
-- Always add test command comment to new test files
+# Standards
+- TypeScript strict mode
+- 80%+ test coverage
 ```
 
-**Pro tip:** Ask Copilot to generate it for you by using the prompt from [GitHub's docs](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions#asking-copilot-coding-agent-to-generate-a-copilot-instructionsmd-file).
+**Pro tip:** Ask Copilot to [generate it for you](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions#asking-copilot-coding-agent-to-generate-a-copilot-instructionsmd-file).
 
-**Recommended template structure:**
-```markdown
-# [Technology or Domain Name] Guidelines
+**Takes effect:** Immediately on save. No restart needed.
 
-## Purpose
-Brief statement of what this file covers and when these instructions apply.
-
-## Naming Conventions
-- Rule 1
-- Rule 2
-
-## Code Style
-- Style rule 1
-
-```javascript
-// Example showing correct pattern
-const activeUsers = users.filter(user => user.isActive);
-```
-
-## Error Handling
-- How to handle errors
-- What patterns to use
-
-## Security Considerations
-- Security rule 1
-- Security rule 2
-
-## Testing Guidelines
-- Testing expectation 1
-
-## Performance
-- Performance consideration 1
-```
-
-Adapt this structure to your needs while maintaining clear sectioning and bullet-point format.
+**More guidance:** [Writing effective instructions](#writing-effective-instructions) | [What NOT to include](#what-not-to-include-in-instructions) | [Examples](https://github.com/github/awesome-copilot/tree/main/instructions)
 
 #### Path-Specific Instructions
 
