@@ -1,8 +1,3 @@
----
-name: nextjs-fastapi-duckdb
-description: Guide for adding a FastAPI backend with DuckDB to an existing Next.js app. Use when setting up FastAPI, creating a Python venv, configuring the /api/query proxy route, querying Parquet files with DuckDB, or wiring up dev scripts to run both servers together.
----
-
 # Next.js + FastAPI + DuckDB Setup
 
 Assumes an existing Next.js app. Adds a FastAPI server that executes DuckDB queries against Parquet files, proxied through a Next.js API route.

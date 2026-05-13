@@ -1,8 +1,3 @@
----
-name: nextjs-firestore
-description: Guide for working with Firebase Firestore in Next.js applications. Use when reading/writing Firestore documents, setting up indexes, creating human-readable IDs, or handling client vs server-side Firestore operations. Covers required document fields, index management, and code examples for both client and server contexts.
----
-
 # Next.js Firestore Integration Guide
 
 ## Quick Reference

@@ -1,8 +1,3 @@
----
-name: nextjs-dates
-description: Guide for handling dates in Next.js applications with Firebase Firestore. Use when working with date conversions, Firestore timestamps, date pickers, displaying dates in UI, or handling timezone-specific date parsing (especially Central Time for birth/effective dates). Covers conversion functions and Central Time assumptions.
----
-
 # Next.js Date Handling Guide
 
 ## Quick Reference

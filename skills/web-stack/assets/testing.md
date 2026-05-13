@@ -1,8 +1,3 @@
----
-name: nextjs-testing
-description: Guide for setting up and writing Jest tests for Next.js applications. Use when setting up testing infrastructure, creating test files, mocking Next.js features (next/navigation, next/link, next/image), writing unit and integration tests for Server/Client Components, API routes, hooks, or debugging test failures. Covers Jest setup, React Testing Library best practices, Next.js-specific testing patterns, and test command documentation in source files.
----
-
 # Next.js Testing with Jest
 
 Comprehensive guide for testing Next.js applications using Jest and React Testing Library.
