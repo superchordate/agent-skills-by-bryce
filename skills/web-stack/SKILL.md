@@ -1,6 +1,6 @@
 ---
 name: web-stack
-description: Our preferred web application stack skill covering Next.js frontend development, Firestore database patterns, FastAPI+DuckDB analytics backend, and Jest testing. Use when building, modifying, or testing full-stack web applications with this cohesive technology stack.
+description: Our preferred web application stack skill covering Next.js frontend development, Firestore database patterns, FastAPI+DuckDB analytics backend, and regression/end-to-end (Jest/Cypress) testing. Use when building, modifying, or testing full-stack web applications with this cohesive technology stack.
 ---
 
 # Web Stack Development Guide
@@ -15,6 +15,7 @@ This skill covers the complete web development stack for building production-rea
 2. **Firestore Integration** - Reading, writing, and querying Firebase Firestore database
 3. **FastAPI + DuckDB Backend** - Adding a Python analytics backend for data queries
 4. **Testing with Jest** - Unit and integration testing for frontend components and utilities
+5. **E2E Testing with Cypress** - End-to-end and component testing for Next.js applications
 
 ## Decision Guide
 
@@ -104,12 +105,35 @@ Use when you need to:
 
 ---
 
+### 🌐 Writing E2E Tests?
+
+**See: [Cypress Testing Guide](assets/cypress.md)**
+
+Use when you need to:
+- Set up Cypress for Next.js App Router
+- Write end-to-end tests for user workflows
+- Test component interactions in isolation
+- Run tests efficiently (single spec for speed)
+- Optimize test performance and memory usage
+- Handle Next.js Server Components and Server Actions
+- Test dynamic routes and authentication flows
+
+**Quick concepts:**
+- Set `baseUrl` in config for cleaner tests
+- Use `data-cy` attributes for reliable selectors
+- Run single specs during development: `npx cypress run --spec "cypress/e2e/home.cy.js"`
+- Disable video recording locally for faster execution
+- Component tests for Client Components, E2E for Server Components
+- Use `start-server-and-test` to manage Next.js server
+
+---
+
 ## Technology Stack Overview
 
 **Frontend:** Next.js (React) with TypeScript  
 **Database:** Firebase Firestore (NoSQL)  
 **Analytics Backend:** Python FastAPI + DuckDB  
-**Testing:** Jest + React Testing Library  
+**Testing:** Jest + React Testing Library (unit/integration), Cypress (E2E)  
 **Deployment:** Cloud Run (single container for Next.js + FastAPI)
 
 This stack provides:
@@ -336,7 +360,8 @@ For detailed information on each topic, see the specific guides:
 - **[Date Handling](assets/dates.md)** - Comprehensive date conversion and formatting guide
 - **[Firestore Integration](assets/firestore.md)** - Complete Firestore patterns for Next.js
 - **[FastAPI + DuckDB Setup](assets/fastapi-duckdb.md)** - Full backend integration guide
-- **[Testing with Jest](assets/testing.md)** - Complete testing reference
+- **[Testing with Jest](assets/testing.md)** - Complete unit/integration testing reference
+- **[E2E Testing with Cypress](assets/cypress.md)** - Complete end-to-end testing guide
 
 ### External Resources
 
