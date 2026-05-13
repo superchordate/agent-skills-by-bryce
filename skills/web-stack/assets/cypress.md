@@ -4,6 +4,38 @@
 
 This guide covers best practices for setting up and running Cypress tests with Next.js App Router (13+), focusing on performance optimization and Next.js-specific considerations.
 
+## Quick Reference
+
+**Core Concepts:**
+- E2E tests: Full user workflows, navigation, server interactions → [`cypress/e2e/`](#folder-structure)
+- Component tests: Isolated UI components (Client Components only) → [`cypress/component/`](#writing-component-tests)
+- Server Components: Cannot use component tests, use E2E instead → [Details](#server-components)
+
+**Common Commands:**
+- Install: `npm install -D cypress start-server-and-test`
+- Open Test Runner: `npx cypress open` → [Interactive mode](#interactive-mode-cypress-open)
+- Run all tests: `npx cypress run` → [Headless mode](#headless-vs-headed-mode)
+- Run single spec: `npx cypress run --spec "cypress/e2e/home.cy.js"` → [Fastest feedback](#running-single-spec-fastest)
+- With server: `start-server-and-test dev 3000 'cypress run'` → [Setup](#start-server-before-tests)
+
+**Configuration (`cypress.config.js`):**
+- `baseUrl: 'http://localhost:3000'` - Required for shorter visits → [Setup](#nextjs-specific-configuration)
+- `video: false` - Disable for speed (local dev) → [Performance](#disable-video-recording-locally)
+- `numTestsKeptInMemory: 0` - Reduce memory in CI → [Memory optimization](#reduce-memory-usage)
+
+**Key Rules:**
+- Use `data-cy` attributes for reliable selectors → [Selector best practices](#selector-best-practices)
+- Server Components require E2E tests (not component tests) → [Details](#server-components)
+- Test production build in CI: `npm run build && start-server-and-test start 3000 'cypress run'` → [CI testing](#test-against-production-build-in-ci)
+- Avoid arbitrary `cy.wait()` - use network interception instead → [Performance](#avoid-unnecessary-waits)
+
+**Navigation:**
+- [Setup & Installation](#setup)
+- [Adding Tests](#adding-tests) - E2E and Component examples
+- [Running Tests](#running-tests) - Commands and modes
+- [Performance Optimization](#performance-optimization) - Speed improvements
+- [Next.js Considerations](#nextjs-specific-considerations) - App Router specifics
+
 ## Table of Contents
 - [Setup](#setup)
 - [Adding Tests](#adding-tests)
@@ -664,42 +696,16 @@ describe('Blog Post Page', () => {
 
 ---
 
-## Quick Reference
+## Configuration Checklist
 
-### Common Commands
+When setting up Cypress for a new Next.js project:
 
-```bash
-# Open Cypress Test Runner
-npx cypress open
-
-# Run all E2E tests headlessly
-npx cypress run
-
-# Run single spec file
-npx cypress run --spec "cypress/e2e/home.cy.js"
-
-# Run with specific browser
-npx cypress run --browser chrome
-
-# Run with headed browser (visible)
-npx cypress run --headed
-
-# Component testing
-npx cypress open --component
-npx cypress run --component
-
-# Start server and run tests
-npm run build && start-server-and-test start 3000 'cypress run'
-```
-
-### Configuration Checklist
-
-- [ ] Set `baseUrl` to your dev server URL
-- [ ] Disable `video` for local development
-- [ ] Set `numTestsKeptInMemory: 0` for CI
+- [ ] Set `baseUrl` to your dev server URL (`http://localhost:3000`)
+- [ ] Disable `video` for local development (`video: false`)
+- [ ] Set `numTestsKeptInMemory: 0` for CI environments
 - [ ] Add `start-server-and-test` to package.json scripts
 - [ ] Configure both E2E and Component testing (if needed)
-- [ ] Set up proper environment variables
+- [ ] Set up proper environment variables in `cypress.config.js`
 - [ ] Add `.gitignore` entries for Cypress artifacts
 
 ### .gitignore for Cypress
